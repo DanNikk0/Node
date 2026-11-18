@@ -1,14 +1,19 @@
-const http = require ('http');
+const http = require('http');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+const hostname = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT || 3000;
 
-const server = http.createServer((req, res)=>{
+const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     res.end('Hello World');
 });
 
-server.listen(port, hostname, ()=>{
-    console.log(`Server em http://${hostname}:${port}/`);
-});
+if (require.main === module) {
+    server.listen(port, hostname, () => {
+        const returnPort = server.address().port;
+        console.log(`Server em http://${hostname}:${returnPort}/`);
+    });
+}
+
+module.exports = server;
